@@ -40,4 +40,37 @@ CHIP CPU {
 
     PARTS:
     // Put your code here:
+    Mux16(a=instruction, b=ALUOut, sel=instruction[15], out=instr);
+
+    Not(in=instruction[15], out=aInstr);
+    Or(a=aInstr, b=instruction[5], out=aRegDest);
+    ARegister(in=instr, load=aRegDest, out=aRegOut, out[0..14]=addressM);
+
+    And(a=instruction[15], b=instruction[12], out=instrOrInM);
+    Mux16(a=aRegOut, b=inM, sel=instrOrInM, out=AorMOut);
+
+    ALU(x=dRegOut, y=AorMOut, zx=instruction[11], nx=instruction[10], zy=instruction[9], ny=instruction[8], f=instruction[7], no=instruction[6], out=ALUOut, out=outM, zr=zero, ng=negative);
+
+    And(a=instruction[15], b=instruction[4], out=dRegDest);
+    DRegister(in=ALUOut, load=dRegDest, out=dRegOut);
+
+    And(a=instruction[15], b=instruction[3], out=writeM);
+
+    And(a=instruction[15], b=instruction[0], out=jgt);
+    And(a=instruction[15], b=instruction[1], out=jeq);
+    And(a=instruction[15], b=instruction[2], out=jlt);
+    
+    Not(in=zero, out=nonZero);
+    Not(in=negative, out=positive);
+    And(a=positive, b=nonZero, out=natural);
+    
+    And(a=jgt, b=natural, out=loadJgt);
+    And(a=jeq, b=zero, out=loadJeq);
+    And(a=jlt, b=negative, out=loadJlt);
+    Or(a=loadJgt, b=loadJeq, out=loadJgteq);
+    Or(a=loadJgteq, b=loadJlt, out=loadDest);
+
+    PC(in=aRegOut, load=loadDest, inc=true, reset=reset, out[0..14]=pc);
+
+
 }
