@@ -1,4 +1,4 @@
-#include "parser.h"
+#include "parser.c"
 int main(int argc, const char *argv[]){
   if (argc<2) {
     printf("%d",argc);

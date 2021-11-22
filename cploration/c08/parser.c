@@ -1,8 +1,15 @@
 #include "parser.h"
+#include "symtable.h"
 
 void parse(FILE * file) {
   char line[MAX_LINE_LENGTH] = {0};
+  unsigned int line_num=0;
+  unsigned int instr_num=0;
   while (fgets(line, sizeof(line), file)) {
+    line_num++;
+    if(instr_num>MAX_INSTRUCTIONS){
+      exit_program(EXIT_TOO_MANY_INSTRUCTIONS, MAX_INSTRUCTIONS + 1);
+    }
     strip(line);
     if (!*line) continue;
     char inst_type = ' ';
@@ -13,17 +20,25 @@ void parse(FILE * file) {
       inst_type='L';
       char temp[strlen(line)-2];
       extract_label(line, temp);
-      printf("%c  %s \n", inst_type, temp);
+      if(!isalpha(temp[0])){
+        exit_program(EXIT_INVALID_LABEL, line_num, line);
+      }
+      if(symtable_find(temp)!=NULL){
+        exit_program(EXIT_SYMBOL_ALREADY_EXISTS, line_num, line);
+      }
+      symtable_insert(temp, instr_num);
+      continue;
     }
     if(is_Ctype(line)){
       inst_type='C';
     }
-    if(inst_type != ' ' && inst_type != 'L'){
+    if(inst_type != ' '){
       printf("%c  %s \n",inst_type,line);
     }
     if(inst_type == ' ') {
       printf("%s \n", line);
     }
+    instr_num++;
   }
 }
 
