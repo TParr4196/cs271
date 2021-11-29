@@ -2,6 +2,7 @@
 #include "symtable.h"
 
 void parse(FILE * file) {
+  instruction instr;
   char line[MAX_LINE_LENGTH] = {0};
   unsigned int line_num=0;
   unsigned int instr_num=0;
@@ -16,6 +17,10 @@ void parse(FILE * file) {
     char inst_type = ' ';
     if(is_Atype(line)){
       inst_type='A';
+      if (!parse_A_instruction(line, &instr.instr.a)){
+    	exit_program(EXIT_INVALID_A_INSTR, line_num, line);
+      }
+      instr.itype = INST_A;
     }
     if(is_label(line)){
       inst_type='L';
