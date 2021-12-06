@@ -18,7 +18,6 @@
 typedef int16_t hack_addr;
 typedef int16_t opcode;
 char *strip(char *s);
-void parse(FILE * file);
 bool is_Atype(const char *);
 bool is_label(const char *);
 bool is_Ctype(const char *);
@@ -49,6 +48,7 @@ typedef struct instruction{
   } instr;
   instr_type type;
 } instruction;
+int parse(FILE * file, instruction *instructions);
 bool parse_A_instruction(const char *line, a_instruction *instr);
 void parse_C_instruction(char *line, c_instruction *instr);
 

@@ -135,6 +135,8 @@ static inline dest_id str_to_destid(const char *s) {
     id = DEST_D;
   } else if (strcmp(s, "DM") == 0) {
     id = DEST_DM;
+  } else if (strcmp(s, "MD") == 0) {
+    id = DEST_DM;
   } else if (strcmp(s, "A") == 0) {
     id = DEST_A;
   } else if (strcmp(s, "AM") == 0) {

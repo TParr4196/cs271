@@ -1,7 +1,7 @@
 #include "parser.h"
 #include "symtable.h"
 
-void parse(FILE * file) {
+int parse(FILE * file, instruction *instructions) {
   instruction instr;
   char line[MAX_LINE_LENGTH] = {0};
   unsigned int line_num=0;
@@ -47,7 +47,7 @@ void parse(FILE * file) {
         exit_program(EXIT_INVALID_C_COMP, line_num, line);
       }
       if(instr.instr.c.jump==-1){
-        exit_program(EXIST_INVALID_C_JUMP, line_num, line);
+        exit_program(EXIT_INVALID_C_JUMP, line_num, line);
       }
     }
     if(inst_type != ' '){
@@ -56,8 +56,9 @@ void parse(FILE * file) {
     if(inst_type == ' ') {
       printf("%s \n", line);
     }
-    instr_num++;
+    instructions[instr_num++] = instr;
   }
+  return instr_num;
 }
 
 char *strip(char *s){
@@ -139,19 +140,27 @@ bool parse_A_instruction(const char *line, a_instruction *instr){
 }
 
 void parse_C_instruction(char *line, c_instruction *instr){
-  char *jump;
-  jump = strtok(line, ";");
-  instr->jump=str_to_jumpid(jump);
+  char *dest;
   char *comp;
-  comp = strtok(line, "=");
-  instr->dest=str_to_destid(line);
+  char *jump;
+  int *temp;
+  dest = strtok(line, ";");
+  if (strcmp(dest, line)!=0) {
+    jump = strtok(NULL, ";");
+    instr->dest=str_to_destid(dest);
+    instr->comp=str_to_compid(dest, temp);
+  }
+  else{
+    dest = strtok(line, "=");
+    comp = strtok(NULL, "=");
+    instr->dest=str_to_destid(dest);
+    instr->comp=str_to_compid(comp, temp);
+  }
+  instr->jump=str_to_jumpid(jump);
+  instr->a=temp;
   if (comp == NULL) {
     instr->a=0;
     instr->comp=COMP_0;
+    instr->dest=str_to_destid(comp);
   }
-  else{
-    int *temp=0;
-    instr->comp=str_to_compid(line, temp);
-    instr->a=temp;
-  } 
 }
