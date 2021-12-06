@@ -20,7 +20,7 @@ void parse(FILE * file) {
       if (!parse_A_instruction(line, &instr.instr.a)){
     	exit_program(EXIT_INVALID_A_INSTR, line_num, line);
       }
-      instr.itype = INST_A;
+      instr.type = Atype;
     }
     if(is_label(line)){
       inst_type='L';
@@ -109,7 +109,7 @@ void add_predefined_symbols(){
 bool parse_A_instruction(const char *line, a_instruction *instr){
   char* s=(char*)malloc(strlen(line));
   strcpy(s,line+1);
-  char s_end[MAX_LABEL_LENGTH]= NULL;
+  char *s_end= NULL;;
   long result = strtol(s, &s_end, 10);
   if(0==strcmp(s,s_end)){
     instr->value.label=(char*)malloc(strlen(line));

@@ -8,7 +8,7 @@ int hash(char *str){
     return hash;
 }
 
-void insert(char* key, hack_addr addr){
+void symtable_insert(char* key, hack_addr addr){
   struct Symbol *item = (struct Symbol*) malloc(sizeof(struct Symbol));
   item->name=key;
   item->addr=addr;
@@ -20,7 +20,7 @@ void insert(char* key, hack_addr addr){
   hashArray[hashIndex] = item;
 }
 
-struct Symbol *find(char* key) {
+struct Symbol *symtable_find(char* key) {
   int hashIndex = hash(key);
   while(hashArray[hashIndex]!=NULL) {
     if(hashArray[hashIndex]->name == key) return hashArray[hashIndex];

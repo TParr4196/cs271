@@ -23,7 +23,6 @@ bool is_Atype(const char *);
 bool is_label(const char *);
 bool is_Ctype(const char *);
 void add_predefined_symbols();
-bool parse_A_instruction(const char *line, a_instruction *instr);
 char *extract_label(const char *line, char* label);
 typedef enum instr_type {
   Invalid=-1,
@@ -50,5 +49,6 @@ typedef struct instruction{
   } instr;
   instr_type type;
 } instruction;
+bool parse_A_instruction(const char *line, a_instruction *instr);
 
 #endif
