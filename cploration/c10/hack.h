@@ -233,7 +233,8 @@ static inline comp_id str_to_compid(const char *s, int *a) {
   } else if (strcmp(s, "D|M") == 0) {
     id = COMP_D_OR_M;
     *a=1;
-  } else 
+  }
+  return id;
 }
 
 #endif
