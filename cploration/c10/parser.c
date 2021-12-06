@@ -37,6 +37,18 @@ void parse(FILE * file) {
     }
     if(is_Ctype(line)){
       inst_type='C';
+      char tmp_line[MAX_LINE_LENGTH];
+      strcpy(tmp_line, line);
+      parse_C_instruction(tmp_line, &instr.instr.c);
+      if(instr.instr.c.dest==-1){
+        exit_program(EXIT_INVALID_C_DEST, line_num, line);
+      }
+      if(instr.instr.c.comp==-1){
+        exit_program(EXIT_INVALID_C_COMP, line_num, line);
+      }
+      if(instr.instr.c.jump==-1){
+        exit_program(EXIST_INVALID_C_JUMP, line_num, line);
+      }
     }
     if(inst_type != ' '){
       printf("%c  %s \n",inst_type,line);
@@ -135,7 +147,7 @@ void parse_C_instruction(char *line, c_instruction *instr){
   instr->dest=str_to_destid(line);
   if (comp == NULL) {
     instr->a=0;
-    instr->comp=COMP_INVALID;
+    instr->comp=COMP_0;
   }
   else{
     int *temp=0;
