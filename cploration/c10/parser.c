@@ -109,7 +109,7 @@ void add_predefined_symbols(){
 bool parse_A_instruction(const char *line, a_instruction *instr){
   char* s=(char*)malloc(strlen(line));
   strcpy(s,line+1);
-  char *s_end= NULL;;
+  char *s_end= NULL;
   long result = strtol(s, &s_end, 10);
   if(0==strcmp(s,s_end)){
     instr->value.label=(char*)malloc(strlen(line));
@@ -124,4 +124,22 @@ bool parse_A_instruction(const char *line, a_instruction *instr){
     instr->is_addr=true;
   }
   return true;
+}
+
+void parse_C_instruction(char *line, c_instruction *instr){
+  char *jump;
+  jump = strtok(line, ";");
+  instr->jump=str_to_jumpid(jump);
+  char *comp;
+  comp = strtok(line, "=");
+  instr->dest=str_to_destid(line);
+  if (comp == NULL) {
+    instr->a=0;
+    instr->comp=COMP_INVALID;
+  }
+  else{
+    int *temp=0;
+    instr->comp=str_to_compid(line, temp);
+    instr->a=temp;
+  } 
 }
