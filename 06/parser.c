@@ -72,7 +72,7 @@ char *strip(char *s){
   for (char *s2 = s; *s2; s2++) { 
 
     if (!isspace(*s2)){
-      s_new[i++] = *s2;
+      s_new[i++] = *s2;	
     }
   s_new[i]='\0';
   }
@@ -168,6 +168,26 @@ void parse_C_instruction(char *line, c_instruction *instr){
 void assemble(const char * file_name, instruction* instructions, int num_instructions){
   FILE *file;
   file = fopen("%s.hack", file_name);
+  for (instruction *instructions2 = instructions; *instructions2; instructions2++) {
+    if(instructions2.type==0){
+      if (instructions2.instr.a.is_addr){
+        fprintf(file, "0%c", OPCODE_TO_BINARY(instructions2.instr.a.value.address));
+      }
+      else{
+        struct Symbol label;
+        label=symtable_find(instructions2.instr.a.value.label);
+        if(label==NULL){
+          symtable_insert(instructions2.instr.a.value.label, instructions2.instr.a.value.address);
+          free(instructions2);
+        }
+        fprintf(file, "0%c", OPCODE_TO_BINARY(instructions2.instr.a.value.address));
+      }
+    }
+    else if (instructions2.type==1){
+      fprintf(file, "%c", OPCODE_TO_BINARY(instruction_to_opcode(instructions2)));
+    }
+  }
+  fclose(file);
 }
 
 opcode instruction_to_opcode(c_instruction instr){
