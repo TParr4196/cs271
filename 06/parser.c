@@ -168,5 +168,9 @@ void parse_C_instruction(char *line, c_instruction *instr){
 void assemble(const char * file_name, instruction* instructions, int num_instructions){
   FILE *file;
   file = fopen("%s.hack", file_name);
-  
+}
+
+opcode instruction_to_opcode(c_instruction instr){
+  opcode op = 0;
+  op |= (7 << 13);
 }
