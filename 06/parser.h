@@ -51,5 +51,6 @@ typedef struct instruction{
 int parse(FILE * file, instruction *instructions);
 bool parse_A_instruction(const char *line, a_instruction *instr);
 void parse_C_instruction(char *line, c_instruction *instr);
+void assemble(const char * file_name, instruction* instructions, int num_instructions);
 
 #endif

@@ -164,3 +164,9 @@ void parse_C_instruction(char *line, c_instruction *instr){
     instr->dest=str_to_destid(comp);
   }
 }
+
+void assemble(const char * file_name, instruction* instructions, int num_instructions){
+  FILE *file;
+  file = fopen("%s.hack", file_name);
+  
+}
